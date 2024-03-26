@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rrahadis_web/entities/menu.dart';
+import 'package:rrahadis_web/pages/about_page.dart';
+import 'package:rrahadis_web/pages/experience_page.dart';
+import 'package:rrahadis_web/pages/footer.dart';
 import 'package:rrahadis_web/pages/home_page.dart';
 import 'package:rrahadis_web/pages/work_page.dart';
 
@@ -117,7 +120,13 @@ class _MainPageState extends State<MainPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [HomePage(), WorkPage()],
+                children: [
+                  HomePage(),
+                  WorkPage(),
+                  AboutPage(),
+                  ExperiencePage(),
+                  Footer()
+                ],
               ),
             )),
           ],

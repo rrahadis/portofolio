@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
                 offset: Offset(0, 1),
               )
             ],
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.max,

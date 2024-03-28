@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rrahadis_web/entities/socmed_data.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({required this.onTap, Key? key}) : super(key: key);
 
+  final VoidCallback onTap;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -38,6 +40,12 @@ class _HomePageState extends State<HomePage> {
       value: "https://twitter.com/RahadiNoto",
     ),
   ];
+
+  Future<void> _launchUrl(Uri urlValue) async {
+    if (!await launchUrl(urlValue)) {
+      throw Exception('Could not launch $urlValue');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +163,9 @@ class _HomePageState extends State<HomePage> {
                               side: BorderSide(color: secondaryColor),
                               borderRadius: BorderRadius.circular(5),
                             ))),
-                        onPressed: () {},
+                        onPressed: () {
+                          widget.onTap();
+                        },
                       ),
                     ),
                     Container(
@@ -190,7 +200,11 @@ class _HomePageState extends State<HomePage> {
                                 RoundedRectangleBorder>(RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ))),
-                        onPressed: () {},
+                        onPressed: () {
+                          Uri waUrl = Uri.parse(
+                              "https://wa.me/6285921688572?text=Hello,%20I'm%20interested");
+                          launchUrl(waUrl);
+                        },
                       ),
                     ),
                   ]),
@@ -206,6 +220,9 @@ class _HomePageState extends State<HomePage> {
                                 // setState(() {
                                 //   currentState = index;
                                 // });
+                                final Uri _url =
+                                    Uri.parse(socmed[index].value ?? '');
+                                _launchUrl(_url);
                               },
                               child: Container(
                                 child: Text(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../entities/socmed_data.dart';
 
@@ -109,7 +110,11 @@ class _FooterState extends State<Footer> {
                       RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5),
                   ))),
-              onPressed: () {},
+              onPressed: () {
+                Uri waUrl = Uri.parse(
+                    "https://wa.me/6285921688572?text=Hello,%20I'm%20interested");
+                launchUrl(waUrl);
+              },
             ),
           ),
           SizedBox(
@@ -145,6 +150,9 @@ class _FooterState extends State<Footer> {
                             // setState(() {
                             //   currentState = index;
                             // });
+                            final Uri _url =
+                                Uri.parse(socmed[index].value ?? '');
+                            launchUrl(_url);
                           },
                           child: Container(
                             child: Image.asset(

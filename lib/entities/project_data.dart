@@ -1,12 +1,13 @@
 class ProjectData {
-  ProjectData({
-    this.isFeatured,
-    this.icon,
-    this.name,
-    this.role,
-    this.desc,
-    this.image,
-  });
+  ProjectData(
+      {this.isFeatured,
+      this.icon,
+      this.name,
+      this.role,
+      this.desc,
+      this.image,
+      this.url,
+      this.isHover});
 
   bool? isFeatured;
   String? icon;
@@ -14,4 +15,6 @@ class ProjectData {
   String? role;
   String? desc;
   String? image;
+  String? url;
+  bool? isHover;
 }

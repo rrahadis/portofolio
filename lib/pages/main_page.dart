@@ -6,7 +6,9 @@ import 'package:rrahadis_web/pages/about_page.dart';
 import 'package:rrahadis_web/pages/experience_page.dart';
 import 'package:rrahadis_web/pages/footer.dart';
 import 'package:rrahadis_web/pages/home_page.dart';
+import 'package:rrahadis_web/pages/skill_page.dart';
 import 'package:rrahadis_web/pages/work_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -20,6 +22,12 @@ class _MainPageState extends State<MainPage> {
   var secondaryColor = const Color(0XFFE84D35);
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
+
+  final homeKey = new GlobalKey();
+  final workKey = new GlobalKey();
+  final aboutKey = new GlobalKey();
+  final experienceKey = new GlobalKey();
+  final skillKey = new GlobalKey();
 
   List<Menu> menuData = [
     Menu(id: 0, name: "Home"),
@@ -59,6 +67,29 @@ class _MainPageState extends State<MainPage> {
                               setState(() {
                                 currentState = index;
                               });
+
+                              switch (menuData[index].id) {
+                                case 0:
+                                  Scrollable.ensureVisible(
+                                      homeKey.currentContext ?? context);
+                                  break;
+                                case 1:
+                                  Scrollable.ensureVisible(
+                                      workKey.currentContext ?? context);
+                                  break;
+                                case 2:
+                                  Scrollable.ensureVisible(
+                                      aboutKey.currentContext ?? context);
+                                  break;
+                                case 3:
+                                  Scrollable.ensureVisible(
+                                      experienceKey.currentContext ?? context);
+                                  break;
+                                case 4:
+                                  Scrollable.ensureVisible(
+                                      skillKey.currentContext ?? context);
+                                  break;
+                              }
                             },
                             child: checkCurrentNavigation(index)),
                       ),
@@ -96,7 +127,11 @@ class _MainPageState extends State<MainPage> {
                                   RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ))),
-                      onPressed: () {},
+                      onPressed: () {
+                        Uri waUrl = Uri.parse(
+                            "https://wa.me/6285921688572?text=Hello,%20I'm%20interested");
+                        launchUrl(waUrl);
+                      },
                     ),
                   ),
                 ],
@@ -121,10 +156,28 @@ class _MainPageState extends State<MainPage> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  HomePage(),
-                  WorkPage(),
-                  AboutPage(),
-                  ExperiencePage(),
+                  Container(
+                    key: homeKey,
+                    child: HomePage(
+                        onTap: () => Scrollable.ensureVisible(
+                            workKey.currentContext ?? context)),
+                  ),
+                  Container(
+                    key: workKey,
+                    child: WorkPage(),
+                  ),
+                  Container(
+                    key: aboutKey,
+                    child: AboutPage(),
+                  ),
+                  Container(
+                    key: experienceKey,
+                    child: ExperiencePage(),
+                  ),
+                  Container(
+                    key: skillKey,
+                    child: SkillPage(),
+                  ),
                   Footer()
                 ],
               ),

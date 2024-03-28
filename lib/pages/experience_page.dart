@@ -153,69 +153,7 @@ class _ExperiencePageState extends State<ExperiencePage> {
             color: greyColor,
           ),
           SizedBox(
-            height: 15.h,
-          ),
-          Container(
-            padding: EdgeInsets.all(5.dg),
-            margin: EdgeInsets.all(5.dg),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(40),
-            ),
-            child: GridView.builder(
-                shrinkWrap: true,
-                itemCount: skillData.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 20.h,
-                    crossAxisSpacing: 4.w,
-                    childAspectRatio: 3),
-                itemBuilder: (BuildContext context, int index) {
-                  var dataSkill = skillData[index];
-                  return Container(
-                      padding: EdgeInsets.all(5.dg),
-                      decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(40),
-                      ),
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Expanded(
-                              child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(dataSkill.level.toString(),
-                                  style: GoogleFonts.nunito(
-                                      fontSize: 4.sp,
-                                      color: secondaryColor,
-                                      fontWeight: FontWeight.w400)),
-                              SizedBox(
-                                height: 3.h,
-                              ),
-                              Text(
-                                dataSkill.name.toString(),
-                                style: GoogleFonts.nunito(
-                                    fontSize: 5.sp,
-                                    color: blackColor,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                            ],
-                          )),
-                          Container(
-                            // margin: EdgeInsets.only(
-                            //     top: 10.w, left: 10.w, right: 10.w),
-                            child: Image.asset(
-                              dataSkill.image.toString(),
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ],
-                      ));
-                }),
+            height: 20.h,
           ),
         ],
       ),

@@ -38,6 +38,55 @@ class _MainPageState extends State<MainPage> {
   ];
 
   var currentState = 0;
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initListenerForInteractWithHeaderIndex();
+    });
+    super.initState();
+  }
+
+  void _initListenerForInteractWithHeaderIndex() {
+    double homeHeight = homeKey.currentContext!.size!.height;
+    double workHeight = workKey.currentContext!.size!.height;
+    double aboutHeight = aboutKey.currentContext!.size!.height;
+    double experienceHeight = experienceKey.currentContext!.size!.height;
+    double skillHeight = skillKey.currentContext!.size!.height;
+
+    _controller.addListener(() {
+      double controllerHeight = _controller.offset;
+
+      if (controllerHeight < homeHeight) {
+        setState(() {
+          currentState = 0;
+        });
+      } else if (controllerHeight < (homeHeight + workHeight)) {
+        setState(() {
+          currentState = 1;
+        });
+      } else if (controllerHeight < (homeHeight + workHeight + aboutHeight)) {
+        setState(() {
+          currentState = 2;
+        });
+      } else if (controllerHeight <
+          (homeHeight + workHeight + aboutHeight + experienceHeight)) {
+        setState(() {
+          currentState = 3;
+        });
+      } else if (controllerHeight <
+          (homeHeight +
+              workHeight +
+              aboutHeight +
+              experienceHeight +
+              skillHeight)) {
+        setState(() {
+          currentState = 4;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +201,7 @@ class _MainPageState extends State<MainPage> {
           children: [
             Expanded(
                 child: SingleChildScrollView(
+              controller: _controller,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -191,7 +241,7 @@ class _MainPageState extends State<MainPage> {
       return Text(
         menuData[idx].name.toString(),
         style: GoogleFonts.nunito(
-            fontSize: 4.sp, color: Colors.black, fontWeight: FontWeight.w700),
+            fontSize: 4.sp, color: Colors.black, fontWeight: FontWeight.w900),
       );
     } else {
       return Text(

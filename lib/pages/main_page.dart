@@ -318,12 +318,47 @@ class _MainPageState extends State<MainPage> {
                         margin: EdgeInsets.symmetric(vertical: 10.h),
                         child: Column(
                           children: [
-                            Text(
-                              menuData[index].name.toString(),
-                              style: GoogleFonts.nunito(
-                                  fontSize: 12.sp,
-                                  color: greyColor,
-                                  fontWeight: FontWeight.w700),
+                            TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  currentState = index;
+                                });
+
+                                switch (menuData[index].id) {
+                                  case 0:
+                                    Scrollable.ensureVisible(
+                                        homeKey.currentContext ?? context,
+                                        duration: Duration(milliseconds: 500));
+                                    break;
+                                  case 1:
+                                    Scrollable.ensureVisible(
+                                        workKey.currentContext ?? context,
+                                        duration: Duration(milliseconds: 500));
+                                    break;
+                                  case 2:
+                                    Scrollable.ensureVisible(
+                                        aboutKey.currentContext ?? context,
+                                        duration: Duration(milliseconds: 500));
+                                    break;
+                                  case 3:
+                                    Scrollable.ensureVisible(
+                                        experienceKey.currentContext ?? context,
+                                        duration: Duration(milliseconds: 500));
+                                    break;
+                                  case 4:
+                                    Scrollable.ensureVisible(
+                                        skillKey.currentContext ?? context,
+                                        duration: Duration(milliseconds: 500));
+                                    break;
+                                }
+                              },
+                              child: Text(
+                                menuData[index].name.toString(),
+                                style: GoogleFonts.nunito(
+                                    fontSize: 12.sp,
+                                    color: greyColor,
+                                    fontWeight: FontWeight.w700),
+                              ),
                             ),
                           ],
                         )))),

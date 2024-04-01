@@ -126,6 +126,7 @@ class _SkillPageState extends State<SkillPage> {
             child: GridView.builder(
                 shrinkWrap: true,
                 itemCount: skillData.length,
+                physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: GridViewAdapter(),
                     mainAxisSpacing: GridViewMainAxisAdapter(),

@@ -29,7 +29,9 @@
 .packages
 .pub-cache/
 .pub/
-/build/
+build/flutter_assets
+build/379301311621e2943cca8697f39daeab
+build/a92390da52684543fc3e7f2d6a05015c.cache.dill.track.dill
 
 # Web related
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../core/device_size.dart';
 import '../entities/project_data.dart';
 
 class WorkPage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _WorkPageState extends State<WorkPage> {
         name: "Octo Mobile V1",
         role: "Frontend Developer",
         desc:
-            "Mobile Banking App and handle several features like search menu, customer preferred and Insurance with Kony JS.",
+            "Mobile Banking App and handle several features like search menu, Development customer preferred and Insurance with Kony JS.",
         image: "images/img_octo_v1.png",
         isHover: false,
         url:
@@ -41,7 +42,7 @@ class _WorkPageState extends State<WorkPage> {
         name: "Octo Mobile V2",
         role: "Frontend Developer",
         desc:
-            "Mobile Banking App and handle several features like Bill payment, Travel Concierge and M-Pin",
+            "Mobile Banking App and handle several features like Bill payment, Travel Concierge and M-Pin. Development with Kotlin and Architecture Pattern VIPER.",
         image: "images/img_octo_v2.png",
         isHover: false,
         url:
@@ -52,7 +53,7 @@ class _WorkPageState extends State<WorkPage> {
         name: "Prodia For Doctor",
         role: "Mobile Developer",
         desc:
-            "Development several features like special offer, order services, and enhancement UI and maintenance an app.",
+            "Development several features like special offer, order services, and enhancement UI and maintenance an app. Development with Flutter and BLOC State Management.",
         image: "images/img_pfd.png",
         isHover: false,
         url: "https://play.google.com/store/apps/details?id=id.prodia.doctor"),
@@ -62,7 +63,7 @@ class _WorkPageState extends State<WorkPage> {
         name: "Prodia Mobile",
         role: "Mobile Developer",
         desc:
-            "Development several features like chat system, and enhancement UI and maintenance an app.",
+            "Development several features like chat system, and enhancement UI and maintenance an app. Development with Kotlin and Clean Architecture also Architecture Pattern MVVM.",
         image: "images/img_pm.png",
         isHover: false,
         url:
@@ -73,7 +74,7 @@ class _WorkPageState extends State<WorkPage> {
         name: "Ethos Mobile",
         role: "Mobile Developer",
         desc:
-            "Development officer Android app for take an order, tracking an officer with google maps direction and chat system.",
+            "Development officer Android app for take an order, tracking an officer with google maps direction and chat system. Development with Kotlin and Clean Architecture also Architecture Pattern MVVM.",
         image: "images/img_ethos.png",
         isHover: false,
         url:
@@ -83,7 +84,8 @@ class _WorkPageState extends State<WorkPage> {
         icon: "images/ic_bni.png",
         name: "Xpora BNI MVP 2",
         role: "Frontend Developer",
-        desc: "Development several features BCU, Inspiration and on boarding.",
+        desc:
+            "Development several features BCU, Inspiration and on boarding, Development with Vue JS",
         image: "images/img_xpora.png",
         isHover: false,
         url: "https://xpora.bni.co.id/"),
@@ -92,6 +94,37 @@ class _WorkPageState extends State<WorkPage> {
   var secondaryColor = const Color(0XFFE84D35);
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
+
+  int GridViewAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 3;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
+
+  double MarginHorizontalItemAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 6.w;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 10.w;
+    } else {
+      return 25.w;
+    }
+  }
+
+  double IconSizeAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 9.dm;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 12.dm;
+    } else {
+      return 20.dm;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -126,15 +159,18 @@ class _WorkPageState extends State<WorkPage> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Image.asset(
-                              skillData[index],
-                              fit: BoxFit.fill,
+                            Container(
+                              height: 20.h,
+                              child: Image.asset(
+                                skillData[index],
+                                // fit: BoxFit.fill,
+                              ),
                             ),
                             SizedBox(width: 8.w),
                             if (index != skillData.length - 1) ...[
                               Icon(
                                 Icons.circle,
-                                size: 10,
+                                size: 8,
                                 color: greyColor,
                               ),
                             ],
@@ -149,12 +185,12 @@ class _WorkPageState extends State<WorkPage> {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 10.w),
           child: GridView.builder(
-            primary: true,
+            // primary: true,
             shrinkWrap: true,
-            // physics: NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: projectData.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+                crossAxisCount: GridViewAdapter(),
                 mainAxisSpacing: 20.h,
                 crossAxisSpacing: 4.w,
                 childAspectRatio: 1),
@@ -172,10 +208,6 @@ class _WorkPageState extends State<WorkPage> {
                   });
                 },
                 child: Container(
-
-                    // height: 60.h,
-                    // padding:
-                    //     EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                     decoration: BoxDecoration(
                       color: data.isHover == true
                           ? Colors.grey.shade200
@@ -197,7 +229,9 @@ class _WorkPageState extends State<WorkPage> {
                         if (data.isFeatured == true) ...[
                           Container(
                               margin: EdgeInsets.only(
-                                  left: 6.w, right: 6.w, top: 15.h),
+                                  left: MarginHorizontalItemAdapter(),
+                                  right: MarginHorizontalItemAdapter(),
+                                  top: 10.h),
                               padding: EdgeInsets.symmetric(
                                   horizontal: 5.w, vertical: 5.h),
                               decoration: BoxDecoration(
@@ -209,26 +243,32 @@ class _WorkPageState extends State<WorkPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Icon(Icons.circle,
-                                      size: 10, color: secondaryColor),
+                                      size: 8, color: secondaryColor),
                                   SizedBox(
                                     width: 2.w,
                                   ),
                                   Text(
                                     "Featured",
                                     style: GoogleFonts.nunito(
-                                        fontSize: 3.sp,
+                                        fontSize: 13.spMin,
                                         color: secondaryColor,
                                         fontWeight: FontWeight.w700),
                                     textAlign: TextAlign.center,
                                   ),
                                 ],
                               )),
+                        ] else ...[
+                          SizedBox(
+                            height: 10.h,
+                          )
                         ],
                         Container(
-                          width: 50,
-                          height: 50,
-                          margin:
-                              EdgeInsets.only(left: 6.w, right: 6.w, top: 15.h),
+                          width: IconSizeAdapter(),
+                          height: IconSizeAdapter(),
+                          margin: EdgeInsets.only(
+                              left: MarginHorizontalItemAdapter(),
+                              right: MarginHorizontalItemAdapter(),
+                              top: 10.h),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: greyColor,
@@ -240,46 +280,56 @@ class _WorkPageState extends State<WorkPage> {
                           ),
                         ),
                         Container(
-                          margin:
-                              EdgeInsets.only(left: 6.w, right: 6.w, top: 15.h),
+                          margin: EdgeInsets.only(
+                              left: MarginHorizontalItemAdapter(),
+                              right: MarginHorizontalItemAdapter(),
+                              top: 10.h),
                           child: Text(
                             data.name.toString(),
                             style: GoogleFonts.nunito(
-                                fontSize: 5.sp,
+                                fontSize: 18.spMin,
                                 color: blackColor,
                                 fontWeight: FontWeight.w700),
                             textAlign: TextAlign.center,
                           ),
                         ),
                         Container(
-                          margin:
-                              EdgeInsets.only(left: 6.w, right: 6.w, top: 5.h),
+                          margin: EdgeInsets.only(
+                              left: MarginHorizontalItemAdapter(),
+                              right: MarginHorizontalItemAdapter(),
+                              top: 5.h),
                           child: Text(
                             "As ${data.role.toString()}",
                             style: GoogleFonts.nunito(
-                                fontSize: 3.sp,
+                                fontSize: 15.spMin,
                                 color: secondaryColor,
                                 fontWeight: FontWeight.w700),
                             textAlign: TextAlign.start,
                           ),
                         ),
                         Container(
-                          margin:
-                              EdgeInsets.only(left: 6.w, right: 6.w, top: 5.h),
+                          margin: EdgeInsets.only(
+                              left: MarginHorizontalItemAdapter(),
+                              right: MarginHorizontalItemAdapter(),
+                              top: 5.h),
                           child: Text(
                             data.desc.toString(),
                             style: GoogleFonts.nunito(
-                                fontSize: 4.sp,
+                                fontSize: 16.spMin,
                                 color: greyColor,
                                 fontWeight: FontWeight.w400),
                             textAlign: TextAlign.start,
                           ),
                         ),
+                        if (DeviceSize().isLargeScreen(context)) ...[
+                          SizedBox(
+                            height: 45.h,
+                          ),
+                        ],
                         Expanded(
                           child: Center(
                             child: Container(
-                              margin: EdgeInsets.only(
-                                  left: 6.w, right: 6.w, top: 15.h),
+                              margin: EdgeInsets.only(top: 15.h),
                               child: Image.asset(
                                 data.image.toString(),
                                 fit: BoxFit.fill,

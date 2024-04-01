@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/device_size.dart';
 import '../entities/skill_data.dart';
 
 class SkillPage extends StatefulWidget {
@@ -43,6 +44,56 @@ class _SkillPageState extends State<SkillPage> {
   var lightGreyColor = const Color(0XFF2F2F2);
   var blackColor = const Color(0XFF000000);
 
+  int GridViewAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 3;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 3;
+    } else {
+      return 2;
+    }
+  }
+
+  double GridViewRadiusAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 40;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 20;
+    } else {
+      return 15;
+    }
+  }
+
+  double GridViewMainAxisAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 40.h;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 15.h;
+    } else {
+      return 15.h;
+    }
+  }
+
+  double GridViewMarginHorizontalAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 5.w;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 7.w;
+    } else {
+      return 12.w;
+    }
+  }
+
+  List GridViewFontAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return [4.spMax, 5.spMax];
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return [8.spMin, 10.spMin];
+    } else {
+      return [10.spMin, 12.spMin];
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -57,7 +108,7 @@ class _SkillPageState extends State<SkillPage> {
             offset: Offset(0, 1),
           )
         ],
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(GridViewRadiusAdapter()),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,23 +121,26 @@ class _SkillPageState extends State<SkillPage> {
             margin: EdgeInsets.all(5.dg),
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(GridViewRadiusAdapter()),
             ),
             child: GridView.builder(
                 shrinkWrap: true,
                 itemCount: skillData.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 20.h,
-                    crossAxisSpacing: 4.w,
+                    crossAxisCount: GridViewAdapter(),
+                    mainAxisSpacing: GridViewMainAxisAdapter(),
+                    crossAxisSpacing: 10.w,
                     childAspectRatio: 3),
                 itemBuilder: (BuildContext context, int index) {
                   var dataSkill = skillData[index];
                   return Container(
-                      padding: EdgeInsets.all(5.dg),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: GridViewMarginHorizontalAdapter(),
+                          vertical: 5.dg),
                       decoration: BoxDecoration(
                         color: primaryColor,
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius:
+                            BorderRadius.circular(GridViewRadiusAdapter()),
                       ),
                       alignment: Alignment.center,
                       child: Row(
@@ -100,7 +154,7 @@ class _SkillPageState extends State<SkillPage> {
                             children: [
                               Text(dataSkill.level.toString(),
                                   style: GoogleFonts.nunito(
-                                      fontSize: 4.sp,
+                                      fontSize: GridViewFontAdapter()[0],
                                       color: secondaryColor,
                                       fontWeight: FontWeight.w400)),
                               SizedBox(
@@ -109,7 +163,7 @@ class _SkillPageState extends State<SkillPage> {
                               Text(
                                 dataSkill.name.toString(),
                                 style: GoogleFonts.nunito(
-                                    fontSize: 5.sp,
+                                    fontSize: GridViewFontAdapter()[1],
                                     color: blackColor,
                                     fontWeight: FontWeight.w700),
                               ),
@@ -118,6 +172,8 @@ class _SkillPageState extends State<SkillPage> {
                           Container(
                             // margin: EdgeInsets.only(
                             //     top: 10.w, left: 10.w, right: 10.w),
+                            width: 15.dm,
+                            height: 15.dm,
                             child: Image.asset(
                               dataSkill.image.toString(),
                               fit: BoxFit.fill,

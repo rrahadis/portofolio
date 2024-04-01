@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/device_size.dart';
 import '../entities/skill_data.dart';
 import '../entities/work_experience_data.dart';
 
@@ -68,6 +69,16 @@ class _ExperiencePageState extends State<ExperiencePage> {
   var lightGreyColor = const Color(0XFF2F2F2);
   var blackColor = const Color(0XFF000000);
 
+  int GridViewAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 3;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -93,12 +104,14 @@ class _ExperiencePageState extends State<ExperiencePage> {
           Text(
             "Unleashing Innovation",
             style: GoogleFonts.nunito(
-                fontSize: 5.sp, color: greyColor, fontWeight: FontWeight.w400),
+                fontSize: 14.spMin,
+                color: greyColor,
+                fontWeight: FontWeight.w400),
           ),
           Text(
             "Experience & Skill",
             style: GoogleFonts.nunito(
-                fontSize: 10.sp,
+                fontSize: 24.spMin,
                 color: blackColor,
                 fontWeight: FontWeight.w700),
           ),
@@ -106,16 +119,17 @@ class _ExperiencePageState extends State<ExperiencePage> {
             height: 20.h,
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 10.w),
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
             height: 1,
-            color: greyColor,
+            color: Colors.grey.shade200,
           ),
           Container(
             child: GridView.builder(
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: dataExperiences.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, childAspectRatio: 3),
+                    crossAxisCount: GridViewAdapter(), childAspectRatio: 3),
                 itemBuilder: (BuildContext context, int index) {
                   var dataExperience = dataExperiences[index];
                   return Container(
@@ -126,20 +140,20 @@ class _ExperiencePageState extends State<ExperiencePage> {
                         children: [
                           Text(dataExperience.titleJob.toString(),
                               style: GoogleFonts.nunito(
-                                  fontSize: 5.sp,
+                                  fontSize: 18.spMin,
                                   color: secondaryColor,
                                   fontWeight: FontWeight.w700)),
                           Text(
                             dataExperience.experienceDate.toString(),
                             style: GoogleFonts.nunito(
-                                fontSize: 4.sp,
+                                fontSize: 16.spMin,
                                 color: blackColor,
                                 fontWeight: FontWeight.w400),
                           ),
                           Text(
                             dataExperience.company.toString(),
                             style: GoogleFonts.nunito(
-                                fontSize: 4.sp,
+                                fontSize: 16.spMin,
                                 color: blackColor,
                                 fontWeight: FontWeight.w400),
                           )
@@ -148,9 +162,9 @@ class _ExperiencePageState extends State<ExperiencePage> {
                 }),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 10.w),
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
             height: 1,
-            color: greyColor,
+            color: Colors.grey.shade200,
           ),
           SizedBox(
             height: 20.h,

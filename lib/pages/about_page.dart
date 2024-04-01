@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/device_size.dart';
+
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);
 
@@ -15,13 +17,23 @@ class _AboutPageState extends State<AboutPage> {
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
 
+  double RadiusCardAdapter() {
+    if (DeviceSize().isLargeScreen(context)) {
+      return 30;
+    } else if (DeviceSize().isMediumScreen(context)) {
+      return 15;
+    } else {
+      return 8;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Row(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 10.w, left: 10.w, right: 10.w),
+          margin: EdgeInsets.only(top: 20.h, left: 10.w, right: 10.w),
           child: Image.asset(
             "images/img_banner_section.png",
             width: 60.dg,
@@ -32,7 +44,7 @@ class _AboutPageState extends State<AboutPage> {
         Expanded(
             child: Container(
                 height: 60.dg,
-                margin: EdgeInsets.only(right: 8.w, top: 10.w),
+                margin: EdgeInsets.only(right: 8.w, top: 20.h),
                 padding: EdgeInsets.all(5.dg),
                 decoration: BoxDecoration(
                   color: primaryColor,
@@ -43,7 +55,7 @@ class _AboutPageState extends State<AboutPage> {
                       offset: Offset(0, 1),
                     )
                   ],
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(RadiusCardAdapter()),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,

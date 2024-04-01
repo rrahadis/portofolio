@@ -66,7 +66,7 @@ class _FooterState extends State<Footer> {
           ),
           Text("Got A Project?",
               style: GoogleFonts.nunito(
-                  fontSize: 4.sp,
+                  fontSize: 15.spMin,
                   color: primaryColor,
                   fontWeight: FontWeight.w400)),
           SizedBox(
@@ -74,7 +74,7 @@ class _FooterState extends State<Footer> {
           ),
           Text("Let's Connect",
               style: GoogleFonts.lexend(
-                  fontSize: 10.sp,
+                  fontSize: 20.spMin,
                   color: primaryColor,
                   fontWeight: FontWeight.w500)),
           SizedBox(
@@ -91,7 +91,7 @@ class _FooterState extends State<Footer> {
                     Text(
                       "Get In Touch",
                       style: GoogleFonts.nunito(
-                          fontSize: 3.5.sp,
+                          fontSize: 12.spMin,
                           color: primaryColor,
                           fontWeight: FontWeight.w700),
                       textAlign: TextAlign.center,
@@ -127,19 +127,22 @@ class _FooterState extends State<Footer> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                margin: EdgeInsets.only(left: 8.w),
-                child: Text(
-                  "© 2024 Rahadi. All rights reserved.",
-                  style: GoogleFonts.nunito(
-                      fontSize: 4.sp,
-                      color: primaryColor,
-                      fontWeight: FontWeight.w400),
-                  textAlign: TextAlign.center,
+              Expanded(
+                child: Container(
+                  alignment: Alignment.topLeft,
+                  margin: EdgeInsets.only(left: 8.w),
+                  child: Text(
+                    "© 2024 Rahadi. All rights reserved.",
+                    style: GoogleFonts.nunito(
+                        fontSize: 12.spMin,
+                        color: primaryColor,
+                        fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(right: 10.w, top: 10.h, bottom: 8.h),
+                margin: EdgeInsets.only(right: 6.w, top: 6.h, bottom: 8.h),
                 child: Row(
                   children: List.generate(
                     socmed.length,
@@ -155,6 +158,8 @@ class _FooterState extends State<Footer> {
                             launchUrl(_url);
                           },
                           child: Container(
+                            width: 10.dm,
+                            height: 10.dm,
                             child: Image.asset(
                               socmed[index].image.toString(),
                               fit: BoxFit.fill,

@@ -1,9 +1,11 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rrahadis_web/core/device_size.dart';
-import 'package:rrahadis_web/entities/socmed_data.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../entities/response_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({required this.onTap, Key? key}) : super(key: key);
@@ -19,33 +21,25 @@ class _HomePageState extends State<HomePage> {
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
 
-  List<SocmedData> socmed = [
-    SocmedData(
-      id: 0,
-      name: "Github",
-      value: "https://github.com/rrahadis",
-    ),
-    SocmedData(
-      id: 1,
-      name: "LinkedIn",
-      value: "https://www.linkedin.com/in/raden-rahadi-solehuddin/",
-    ),
-    SocmedData(
-      id: 2,
-      name: "Instagram",
-      value: "https://www.instagram.com/rrahadis/",
-    ),
-    SocmedData(
-      id: 3,
-      name: "Twitter",
-      value: "https://twitter.com/RahadiNoto",
-    ),
-  ];
-
   Future<void> _launchUrl(Uri urlValue) async {
     if (!await launchUrl(urlValue)) {
       throw Exception('Could not launch $urlValue');
     }
+  }
+
+  ResponseData? responseData = null;
+
+  @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -95,14 +89,16 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     width: 2.w,
                   ),
-                  Text(
-                    "Available",
-                    style: GoogleFonts.nunito(
-                        fontSize: 5.sp,
-                        color: const Color(0xFF42AE50),
-                        fontWeight: FontWeight.w700),
-                    textAlign: TextAlign.center,
-                  ),
+                  if (responseData?.isAvailable == true) ...[
+                    Text(
+                      "Available",
+                      style: GoogleFonts.nunito(
+                          fontSize: 5.sp,
+                          color: const Color(0xFF42AE50),
+                          fontWeight: FontWeight.w700),
+                      textAlign: TextAlign.center,
+                    ),
+                  ]
                 ],
               )),
           Container(
@@ -111,19 +107,19 @@ class _HomePageState extends State<HomePage> {
               text: TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: "Hello! I'm Rahadi A ",
+                      text: "Hello! ${responseData?.heroName ?? ''} A ",
                       style: GoogleFonts.lexend(
                           fontSize: 18.spMin,
                           color: blackColor,
                           fontWeight: FontWeight.w500)),
                   TextSpan(
-                      text: "Mobile Developer ",
+                      text: "${responseData?.heroJob ?? ''} ",
                       style: GoogleFonts.lexend(
                           fontSize: 18.spMin,
                           color: secondaryColor,
                           fontWeight: FontWeight.w500)),
                   TextSpan(
-                      text: "Based In Indonesia",
+                      text: "Based In ${responseData?.heroCountry ?? ''}",
                       style: GoogleFonts.lexend(
                           fontSize: 18.spMin,
                           color: blackColor,
@@ -135,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           Container(
             margin: EdgeInsets.only(left: 30.w, right: 20.w, top: 5.w),
             child: Text(
-              "From concept to execution, I've been crafting innovative mobile solutions tailored to diverse needs.",
+              responseData?.description ?? '',
               style: GoogleFonts.nunito(
                   fontSize: 12.spMin,
                   color: greyColor,
@@ -213,7 +209,7 @@ class _HomePageState extends State<HomePage> {
             margin: EdgeInsets.only(left: 30.w, right: 10.w, top: 5.w),
             child: Row(
               children: List.generate(
-                socmed.length,
+                responseData?.socmed?.length ?? 0,
                 (index) => Container(
                   margin: EdgeInsets.only(right: 2.w),
                   child: TextButton(
@@ -221,12 +217,13 @@ class _HomePageState extends State<HomePage> {
                         // setState(() {
                         //   currentState = index;
                         // });
-                        final Uri _url = Uri.parse(socmed[index].value ?? '');
+                        final Uri _url =
+                            Uri.parse(responseData?.socmed?[index].value ?? '');
                         _launchUrl(_url);
                       },
                       child: Container(
                         child: Text(
-                          socmed[index].name.toString(),
+                          responseData?.socmed?[index].name ?? '',
                           style: GoogleFonts.nunito(
                               fontSize: 10.spMin,
                               color: greyColor,
@@ -241,8 +238,8 @@ class _HomePageState extends State<HomePage> {
           Container(
             margin: EdgeInsets.only(left: 50.w),
             // width: 500.w,
-            child: Image.asset(
-              "images/profile.png",
+            child: Image.network(
+              responseData?.heroImgUrl ?? '',
               fit: BoxFit.fill,
               // height: MediaQuery.of(context).size.height,
             ),
@@ -295,14 +292,16 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(
                           width: 2.w,
                         ),
-                        Text(
-                          "Available",
-                          style: GoogleFonts.nunito(
-                              fontSize: 5.sp,
-                              color: const Color(0xFF42AE50),
-                              fontWeight: FontWeight.w700),
-                          textAlign: TextAlign.center,
-                        ),
+                        if (responseData?.isAvailable == true) ...[
+                          Text(
+                            "Available",
+                            style: GoogleFonts.nunito(
+                                fontSize: 5.sp,
+                                color: const Color(0xFF42AE50),
+                                fontWeight: FontWeight.w700),
+                            textAlign: TextAlign.center,
+                          ),
+                        ]
                       ],
                     )),
                 Container(
@@ -311,19 +310,20 @@ class _HomePageState extends State<HomePage> {
                     text: TextSpan(
                       children: <TextSpan>[
                         TextSpan(
-                            text: "Hello! I'm Rahadi A ",
+                            text:
+                                "Hello! I'm ${responseData?.heroName ?? ''} A ",
                             style: GoogleFonts.lexend(
                                 fontSize: 12.sp,
                                 color: blackColor,
                                 fontWeight: FontWeight.w500)),
                         TextSpan(
-                            text: "Mobile Developer ",
+                            text: "${responseData?.heroJob ?? ''} ",
                             style: GoogleFonts.lexend(
                                 fontSize: 12.sp,
                                 color: secondaryColor,
                                 fontWeight: FontWeight.w500)),
                         TextSpan(
-                            text: "Based In Indonesia",
+                            text: "Based In ${responseData?.heroCountry ?? ''}",
                             style: GoogleFonts.lexend(
                                 fontSize: 12.sp,
                                 color: blackColor,
@@ -335,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                 Container(
                   margin: EdgeInsets.only(left: 30.w, right: 20.w, top: 5.w),
                   child: Text(
-                    "From concept to execution, I've been crafting innovative mobile solutions tailored to diverse needs.",
+                    responseData?.description ?? '',
                     style: GoogleFonts.nunito(
                         fontSize: 6.sp,
                         color: greyColor,
@@ -417,7 +417,7 @@ class _HomePageState extends State<HomePage> {
                   margin: EdgeInsets.only(left: 30.w, right: 10.w, top: 5.w),
                   child: Row(
                     children: List.generate(
-                      socmed.length,
+                      responseData?.socmed?.length ?? 0,
                       (index) => Container(
                         margin: EdgeInsets.only(right: 2.w),
                         child: TextButton(
@@ -425,13 +425,13 @@ class _HomePageState extends State<HomePage> {
                               // setState(() {
                               //   currentState = index;
                               // });
-                              final Uri _url =
-                                  Uri.parse(socmed[index].value ?? '');
+                              final Uri _url = Uri.parse(
+                                  responseData?.socmed?[index].value ?? '');
                               _launchUrl(_url);
                             },
                             child: Container(
                               child: Text(
-                                socmed[index].name.toString(),
+                                responseData?.socmed?[index].name ?? '',
                                 style: GoogleFonts.nunito(
                                     fontSize: 3.5.sp,
                                     color: greyColor,
@@ -446,8 +446,8 @@ class _HomePageState extends State<HomePage> {
               ],
             )),
             Container(
-              child: Image.asset(
-                "images/profile.png",
+              child: Image.network(
+                responseData?.heroImgUrl ?? '',
                 width: 160.dm,
                 // width: 80.w,
                 fit: BoxFit.fill,

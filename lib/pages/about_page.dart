@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/entities/response_data.dart';
 
 import '../core/device_size.dart';
 
@@ -17,6 +19,8 @@ class _AboutPageState extends State<AboutPage> {
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
 
+  ResponseData? responseData = null;
+
   double RadiusCardAdapter() {
     if (DeviceSize().isLargeScreen(context)) {
       return 30;
@@ -25,6 +29,19 @@ class _AboutPageState extends State<AboutPage> {
     } else {
       return 8;
     }
+  }
+
+  @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -102,8 +119,7 @@ class _AboutPageState extends State<AboutPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              "My approach to coding is centered around writing clean, maintainable code that not only meets but exceeds industry standards.",
+                          Text(responseData?.purpose ?? "",
                               style: GoogleFonts.lexend(
                                   fontSize: 5.sp,
                                   color: blackColor,
@@ -111,8 +127,7 @@ class _AboutPageState extends State<AboutPage> {
                           SizedBox(
                             height: 10.h,
                           ),
-                          Text(
-                              "I thrive on challenges and am constantly seeking ways to push the boundaries of my skills, particularly in Android Development. 🚀✨",
+                          Text(responseData?.howTo ?? "",
                               style: GoogleFonts.lexend(
                                   fontSize: 4.sp,
                                   color: blackColor,

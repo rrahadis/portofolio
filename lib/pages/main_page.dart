@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -38,11 +39,23 @@ class _MainPageState extends State<MainPage> {
     Menu(id: 4, name: "Skill"),
   ];
 
+  var phoneNumber = "";
+
   var currentState = 0;
   final ScrollController _controller = ScrollController();
   bool isExpandedMenu = false;
   @override
   void initState() {
+    DatabaseReference database = FirebaseDatabase.instance
+        .ref()
+        .child('data')
+        .child("hero_phone_number");
+    database.onValue.listen((event) {
+      final phone = event.snapshot.value as String;
+      setState(() {
+        phoneNumber = phone;
+      });
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initListenerScrollForNavigation();
     });
@@ -220,7 +233,7 @@ class _MainPageState extends State<MainPage> {
                     ))),
                 onPressed: () {
                   Uri waUrl = Uri.parse(
-                      "https://wa.me/6285921688572?text=Hello,%20I'm%20interested");
+                      "https://wa.me/${phoneNumber}?text=Hello,%20I'm%20interested");
                   launchUrl(waUrl);
                 },
               ),

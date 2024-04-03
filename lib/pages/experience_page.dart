@@ -1,10 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/entities/response_data.dart';
 
 import '../core/device_size.dart';
-import '../entities/skill_data.dart';
-import '../entities/work_experience_data.dart';
 
 class ExperiencePage extends StatefulWidget {
   const ExperiencePage({Key? key}) : super(key: key);
@@ -14,54 +14,7 @@ class ExperiencePage extends StatefulWidget {
 }
 
 class _ExperiencePageState extends State<ExperiencePage> {
-  List<WorkExperienceData> dataExperiences = [
-    WorkExperienceData(
-      titleJob: "Laboratory Assistant",
-      company: "Gunadarma University",
-      experienceDate: "February 2018 - October 2020",
-      description:
-          "Have experience as laboratory assistant handle management and maintenance electronics component, and assistant a lecture to teach about electronics and embedded systems.",
-    ),
-    WorkExperienceData(
-      titleJob: "Frontend Developer",
-      company: "PT Infosys Solusi Terpadu",
-      experienceDate: "October 2020 - April 2022",
-      description:
-          "Have experience developement an application using native (kotlin) with Architecture Pattern VIPER and experience development an application using Kony JS, and development web app using Vue JS.",
-    ),
-    WorkExperienceData(
-      titleJob: "Mobile Developer",
-      company: "PT Prodia Widyahusada Tbk",
-      experienceDate: "April 2022 - Present",
-      description:
-          "Have experience development and maintained an application using kotlin with clean architecture MVVM and Flutter.",
-    )
-  ];
-
-  List<SkillData> skillData = [
-    SkillData(
-        level: "Intermediate", name: "Flutter", image: "images/ic_flutter.png"),
-    SkillData(
-        level: "Intermediate", name: "Kotlin", image: "images/ic_kotlin.png"),
-    SkillData(
-        level: "Intermediate",
-        name: "Firebase",
-        image: "images/ic_firebase.png"),
-    SkillData(level: "Beginer", name: "Golang", image: "images/ic_go.png"),
-    SkillData(
-        level: "Beginer",
-        name: "Javascript",
-        image: "images/ic_javascript.png"),
-    SkillData(
-        level: "Intermediate", name: "Github", image: "images/ic_github.png"),
-    SkillData(
-        level: "Beginer", name: "Bitbucket", image: "images/ic_bitbucket.png"),
-    SkillData(
-        level: "Beginer",
-        name: "Confluence",
-        image: "images/ic_confluence.png"),
-    SkillData(level: "Intermediate", name: "Jira", image: "images/ic_jira.png"),
-  ];
+  ResponseData? responseData = null;
 
   var primaryColor = const Color(0xFFFCFCFC);
   var secondaryColor = const Color(0XFFE84D35);
@@ -77,6 +30,19 @@ class _ExperiencePageState extends State<ExperiencePage> {
     } else {
       return 1;
     }
+  }
+
+  @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -127,31 +93,31 @@ class _ExperiencePageState extends State<ExperiencePage> {
             child: GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: dataExperiences.length,
+                itemCount: responseData?.experiences?.length ?? 0,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: GridViewAdapter(), childAspectRatio: 3),
                 itemBuilder: (BuildContext context, int index) {
-                  var dataExperience = dataExperiences[index];
+                  var dataExperience = responseData?.experiences?[index];
                   return Container(
                       alignment: Alignment.center,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(dataExperience.titleJob.toString(),
+                          Text(dataExperience?.titleJob ?? "",
                               style: GoogleFonts.nunito(
                                   fontSize: 18.spMin,
                                   color: secondaryColor,
                                   fontWeight: FontWeight.w700)),
                           Text(
-                            dataExperience.experienceDate.toString(),
+                            dataExperience?.experienceDate ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 16.spMin,
                                 color: blackColor,
                                 fontWeight: FontWeight.w400),
                           ),
                           Text(
-                            dataExperience.company.toString(),
+                            dataExperience?.company ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 16.spMin,
                                 color: blackColor,

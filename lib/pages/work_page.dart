@@ -1,9 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/entities/response_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/device_size.dart';
-import '../entities/project_data.dart';
 
 class WorkPage extends StatefulWidget {
   const WorkPage({Key? key}) : super(key: key);
@@ -13,87 +14,12 @@ class WorkPage extends StatefulWidget {
 }
 
 class _WorkPageState extends State<WorkPage> {
-  List<String> skillData = [
-    "images/ic_skill_android.png",
-    "images/ic_skill_flutter.png",
-    "images/ic_skill_kotlin.png",
-    "images/ic_skill_firebase.png",
-    "images/ic_skill_github.png",
-    "images/ic_skill_bitbucket.png",
-    "images/ic_skill_jira.png",
-    "images/ic_skill_counfluence.png"
-  ];
-
-  List<ProjectData> projectData = [
-    ProjectData(
-        isFeatured: true,
-        icon: "images/ic_octo.png",
-        name: "Octo Mobile V1",
-        role: "Frontend Developer",
-        desc:
-            "Mobile Banking App and handle several features like search menu, Development customer preferred and Insurance with Kony JS.",
-        image: "images/img_octo_v1.png",
-        isHover: false,
-        url:
-            "https://play.google.com/store/apps/details?id=id.co.cimbniaga.mobile.android"),
-    ProjectData(
-        isFeatured: true,
-        icon: "images/ic_octo.png",
-        name: "Octo Mobile V2",
-        role: "Frontend Developer",
-        desc:
-            "Mobile Banking App and handle several features like Bill payment, Travel Concierge and M-Pin. Development with Kotlin and Architecture Pattern VIPER.",
-        image: "images/img_octo_v2.png",
-        isHover: false,
-        url:
-            "https://play.google.com/store/apps/details?id=id.co.cimbniaga.mobile.android"),
-    ProjectData(
-        isFeatured: true,
-        icon: "images/ic_prodia.png",
-        name: "Prodia For Doctor",
-        role: "Mobile Developer",
-        desc:
-            "Development several features like special offer, order services, and enhancement UI and maintenance an app. Development with Flutter and BLOC State Management.",
-        image: "images/img_pfd.png",
-        isHover: false,
-        url: "https://play.google.com/store/apps/details?id=id.prodia.doctor"),
-    ProjectData(
-        isFeatured: true,
-        icon: "images/ic_prodia.png",
-        name: "Prodia Mobile",
-        role: "Mobile Developer",
-        desc:
-            "Development several features like chat system, and enhancement UI and maintenance an app. Development with Kotlin and Clean Architecture also Architecture Pattern MVVM.",
-        image: "images/img_pm.png",
-        isHover: false,
-        url:
-            "https://play.google.com/store/apps/details?id=com.prodia.mobileandroid"),
-    ProjectData(
-        isFeatured: false,
-        icon: "images/ic_prodia.png",
-        name: "Ethos Mobile",
-        role: "Mobile Developer",
-        desc:
-            "Development officer Android app for take an order, tracking an officer with google maps direction and chat system. Development with Kotlin and Clean Architecture also Architecture Pattern MVVM.",
-        image: "images/img_ethos.png",
-        isHover: false,
-        url:
-            "https://play.google.com/store/apps/details?id=com.prodia.prodiahomeservicev2"),
-    ProjectData(
-        isFeatured: false,
-        icon: "images/ic_bni.png",
-        name: "Xpora BNI MVP 2",
-        role: "Frontend Developer",
-        desc:
-            "Development several features BCU, Inspiration and on boarding, Development with Vue JS",
-        image: "images/img_xpora.png",
-        isHover: false,
-        url: "https://xpora.bni.co.id/"),
-  ];
   var primaryColor = const Color(0xFFFCFCFC);
   var secondaryColor = const Color(0XFFE84D35);
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
+
+  ResponseData? responseData = null;
 
   int GridViewAdapter() {
     if (DeviceSize().isLargeScreen(context)) {
@@ -126,6 +52,19 @@ class _WorkPageState extends State<WorkPage> {
   }
 
   @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Column(
@@ -151,7 +90,7 @@ class _WorkPageState extends State<WorkPage> {
               margin: EdgeInsets.symmetric(vertical: 8.h),
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: skillData.length,
+                  itemCount: responseData?.skillIcon?.length ?? 0,
                   itemBuilder: (BuildContext context, int index) {
                     return Container(
                         alignment: Alignment.center,
@@ -161,13 +100,16 @@ class _WorkPageState extends State<WorkPage> {
                           children: [
                             Container(
                               height: 20.h,
-                              child: Image.asset(
-                                skillData[index],
+                              child: Image.network(
+                                responseData?.skillIcon?[index] ?? '',
                                 // fit: BoxFit.fill,
                               ),
                             ),
                             SizedBox(width: 8.w),
-                            if (index != skillData.length - 1) ...[
+                            if (responseData != null &&
+                                responseData!.skillIcon != null &&
+                                index !=
+                                    responseData!.skillIcon!.length - 1) ...[
                               Icon(
                                 Icons.circle,
                                 size: 8,
@@ -188,28 +130,28 @@ class _WorkPageState extends State<WorkPage> {
             // primary: true,
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: projectData.length,
+            itemCount: responseData?.projects?.length ?? 0,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: GridViewAdapter(),
                 mainAxisSpacing: 20.h,
                 crossAxisSpacing: 4.w,
                 childAspectRatio: 1),
             itemBuilder: (BuildContext context, int index) {
-              var data = projectData[index];
+              var data = responseData?.projects?[index];
               return InkWell(
                 borderRadius: BorderRadius.circular(40),
                 onTap: () {
-                  Uri value = Uri.parse(data.url.toString());
+                  Uri value = Uri.parse(data?.url ?? '');
                   launchUrl(value);
                 },
                 onHover: (value) {
                   setState(() {
-                    data.isHover = value;
+                    data?.isHover = value;
                   });
                 },
                 child: Container(
                     decoration: BoxDecoration(
-                      color: data.isHover == true
+                      color: data?.isHover == true
                           ? Colors.grey.shade200
                           : primaryColor,
                       boxShadow: [
@@ -226,7 +168,7 @@ class _WorkPageState extends State<WorkPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (data.isFeatured == true) ...[
+                        if (data?.isFeatured == true) ...[
                           Container(
                               margin: EdgeInsets.only(
                                   left: MarginHorizontalItemAdapter(),
@@ -274,8 +216,8 @@ class _WorkPageState extends State<WorkPage> {
                             color: greyColor,
                             // borderRadius: BorderRadius.all(Radius.circular(50)),
                           ),
-                          child: Image.asset(
-                            data.icon ?? "",
+                          child: Image.network(
+                            data?.icon ?? "",
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -285,7 +227,7 @@ class _WorkPageState extends State<WorkPage> {
                               right: MarginHorizontalItemAdapter(),
                               top: 10.h),
                           child: Text(
-                            data.name.toString(),
+                            data?.name ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 18.spMin,
                                 color: blackColor,
@@ -299,7 +241,7 @@ class _WorkPageState extends State<WorkPage> {
                               right: MarginHorizontalItemAdapter(),
                               top: 5.h),
                           child: Text(
-                            "As ${data.role.toString()}",
+                            "As ${data?.role.toString()}",
                             style: GoogleFonts.nunito(
                                 fontSize: 15.spMin,
                                 color: secondaryColor,
@@ -313,7 +255,7 @@ class _WorkPageState extends State<WorkPage> {
                               right: MarginHorizontalItemAdapter(),
                               top: 5.h),
                           child: Text(
-                            data.desc.toString(),
+                            data?.desc ?? "",
                             style: GoogleFonts.nunito(
                                 fontSize: 16.spMin,
                                 color: greyColor,
@@ -330,8 +272,8 @@ class _WorkPageState extends State<WorkPage> {
                           child: Center(
                             child: Container(
                               margin: EdgeInsets.only(top: 15.h),
-                              child: Image.asset(
-                                data.image.toString(),
+                              child: Image.network(
+                                data?.image ?? "",
                                 fit: BoxFit.fill,
                               ),
                             ),

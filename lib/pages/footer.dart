@@ -1,9 +1,9 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/entities/response_data.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../entities/socmed_data.dart';
 
 class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
@@ -13,32 +13,25 @@ class Footer extends StatefulWidget {
 }
 
 class _FooterState extends State<Footer> {
-  List<SocmedData> socmed = [
-    SocmedData(
-        id: 0,
-        name: "Github",
-        value: "https://github.com/rrahadis",
-        image: "images/ic_footer_git.png"),
-    SocmedData(
-        id: 1,
-        name: "LinkedIn",
-        value: "https://www.linkedin.com/in/raden-rahadi-solehuddin/",
-        image: "images/ic_footer_linkedin.png"),
-    SocmedData(
-        id: 2,
-        name: "Instagram",
-        value: "https://www.instagram.com/rrahadis/",
-        image: "images/ic_footer_ig.png"),
-    SocmedData(
-        id: 3,
-        name: "Twitter",
-        value: "https://twitter.com/RahadiNoto",
-        image: "images/ic_footer_twitter.png"),
-  ];
+  ResponseData? responseData = null;
+
   var primaryColor = const Color(0xFFFCFCFC);
   var secondaryColor = const Color(0XFFE84D35);
   var greyColor = const Color(0XFF797979);
   var blackColor = const Color(0XFF000000);
+
+  @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +105,7 @@ class _FooterState extends State<Footer> {
                   ))),
               onPressed: () {
                 Uri waUrl = Uri.parse(
-                    "https://wa.me/6285921688572?text=Hello,%20I'm%20interested");
+                    "https://wa.me/${responseData?.heroPhoneNumber ?? ""}?text=Hello,%20I'm%20interested");
                 launchUrl(waUrl);
               },
             ),
@@ -132,7 +125,7 @@ class _FooterState extends State<Footer> {
                   alignment: Alignment.topLeft,
                   margin: EdgeInsets.only(left: 8.w),
                   child: Text(
-                    "© 2024 Rahadi. All rights reserved.",
+                    "© 2024 ${responseData?.heroName ?? ""}. All rights reserved.",
                     style: GoogleFonts.nunito(
                         fontSize: 12.spMin,
                         color: primaryColor,
@@ -145,7 +138,7 @@ class _FooterState extends State<Footer> {
                 margin: EdgeInsets.only(right: 6.w, top: 6.h, bottom: 8.h),
                 child: Row(
                   children: List.generate(
-                    socmed.length,
+                    responseData?.socmed?.length ?? 0,
                     (index) => Container(
                       margin: EdgeInsets.only(right: 2.w),
                       child: TextButton(
@@ -153,15 +146,15 @@ class _FooterState extends State<Footer> {
                             // setState(() {
                             //   currentState = index;
                             // });
-                            final Uri _url =
-                                Uri.parse(socmed[index].value ?? '');
+                            final Uri _url = Uri.parse(
+                                responseData?.socmed?[index].value ?? '');
                             launchUrl(_url);
                           },
                           child: Container(
                             width: 10.dm,
                             height: 10.dm,
-                            child: Image.asset(
-                              socmed[index].image.toString(),
+                            child: Image.network(
+                              responseData?.socmed?[index].image ?? '',
                               fit: BoxFit.fill,
                             ),
                           )),

@@ -1,9 +1,10 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/entities/response_data.dart';
 
 import '../core/device_size.dart';
-import '../entities/skill_data.dart';
 
 class SkillPage extends StatefulWidget {
   const SkillPage({Key? key}) : super(key: key);
@@ -13,36 +14,13 @@ class SkillPage extends StatefulWidget {
 }
 
 class _SkillPageState extends State<SkillPage> {
-  List<SkillData> skillData = [
-    SkillData(
-        level: "Intermediate", name: "Flutter", image: "images/ic_flutter.png"),
-    SkillData(
-        level: "Intermediate", name: "Kotlin", image: "images/ic_kotlin.png"),
-    SkillData(
-        level: "Intermediate",
-        name: "Firebase",
-        image: "images/ic_firebase.png"),
-    SkillData(level: "Beginer", name: "Golang", image: "images/ic_go.png"),
-    SkillData(
-        level: "Beginer",
-        name: "Javascript",
-        image: "images/ic_javascript.png"),
-    SkillData(
-        level: "Intermediate", name: "Github", image: "images/ic_github.png"),
-    SkillData(
-        level: "Beginer", name: "Bitbucket", image: "images/ic_bitbucket.png"),
-    SkillData(
-        level: "Beginer",
-        name: "Confluence",
-        image: "images/ic_confluence.png"),
-    SkillData(level: "Intermediate", name: "Jira", image: "images/ic_jira.png"),
-  ];
-
   var primaryColor = const Color(0xFFFCFCFC);
   var secondaryColor = const Color(0XFFE84D35);
   var greyColor = const Color(0XFF797979);
   var lightGreyColor = const Color(0XFF2F2F2);
   var blackColor = const Color(0XFF000000);
+
+  ResponseData? responseData = null;
 
   int GridViewAdapter() {
     if (DeviceSize().isLargeScreen(context)) {
@@ -95,6 +73,19 @@ class _SkillPageState extends State<SkillPage> {
   }
 
   @override
+  void initState() {
+    DatabaseReference database = FirebaseDatabase.instance.ref().child('data');
+    database.onValue.listen((event) {
+      final map = event.snapshot.value as Map;
+      final response = ResponseData.fromJson(map);
+      setState(() {
+        responseData = response;
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
     return Container(
@@ -125,7 +116,7 @@ class _SkillPageState extends State<SkillPage> {
             ),
             child: GridView.builder(
                 shrinkWrap: true,
-                itemCount: skillData.length,
+                itemCount: responseData?.skillData?.length ?? 0,
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: GridViewAdapter(),
@@ -133,7 +124,7 @@ class _SkillPageState extends State<SkillPage> {
                     crossAxisSpacing: 10.w,
                     childAspectRatio: 3),
                 itemBuilder: (BuildContext context, int index) {
-                  var dataSkill = skillData[index];
+                  var dataSkill = responseData?.skillData?[index];
                   return Container(
                       padding: EdgeInsets.symmetric(
                           horizontal: GridViewMarginHorizontalAdapter(),
@@ -153,7 +144,7 @@ class _SkillPageState extends State<SkillPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(dataSkill.level.toString(),
+                              Text(dataSkill?.level ?? "",
                                   style: GoogleFonts.nunito(
                                       fontSize: GridViewFontAdapter()[0],
                                       color: secondaryColor,
@@ -162,7 +153,7 @@ class _SkillPageState extends State<SkillPage> {
                                 height: 3.h,
                               ),
                               Text(
-                                dataSkill.name.toString(),
+                                dataSkill?.name ?? "",
                                 style: GoogleFonts.nunito(
                                     fontSize: GridViewFontAdapter()[1],
                                     color: blackColor,
@@ -175,8 +166,8 @@ class _SkillPageState extends State<SkillPage> {
                             //     top: 10.w, left: 10.w, right: 10.w),
                             width: 15.dm,
                             height: 15.dm,
-                            child: Image.asset(
-                              dataSkill.image.toString(),
+                            child: Image.network(
+                              dataSkill?.image ?? "",
                               fit: BoxFit.fill,
                             ),
                           ),

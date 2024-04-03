@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/core/firebase_analytics.dart';
 import 'package:rrahadis_web/entities/response_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../core/device_size.dart';
@@ -141,6 +142,7 @@ class _WorkPageState extends State<WorkPage> {
               return InkWell(
                 borderRadius: BorderRadius.circular(40),
                 onTap: () {
+                  FirebaseAnalytic().logEvent("PROJECT_CLICKED");
                   Uri value = Uri.parse(data?.url ?? '');
                   launchUrl(value);
                 },

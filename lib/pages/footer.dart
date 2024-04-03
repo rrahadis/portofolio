@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rrahadis_web/core/firebase_analytics.dart';
 import 'package:rrahadis_web/entities/response_data.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -104,6 +105,7 @@ class _FooterState extends State<Footer> {
                     borderRadius: BorderRadius.circular(5),
                   ))),
               onPressed: () {
+                FirebaseAnalytic().logEvent("WHATSAPP_CLICKED");
                 Uri waUrl = Uri.parse(
                     "https://wa.me/${responseData?.heroPhoneNumber ?? ""}?text=Hello,%20I'm%20interested");
                 launchUrl(waUrl);
@@ -143,6 +145,7 @@ class _FooterState extends State<Footer> {
                       margin: EdgeInsets.only(right: 2.w),
                       child: TextButton(
                           onPressed: () {
+                            FirebaseAnalytic().logEvent("SOCMED_CLICKED");
                             // setState(() {
                             //   currentState = index;
                             // });

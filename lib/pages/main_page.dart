@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rrahadis_web/core/device_size.dart';
+import 'package:rrahadis_web/core/firebase_analytics.dart';
 import 'package:rrahadis_web/entities/menu.dart';
 import 'package:rrahadis_web/pages/about_page.dart';
 import 'package:rrahadis_web/pages/experience_page.dart';
@@ -232,6 +233,7 @@ class _MainPageState extends State<MainPage> {
                       borderRadius: BorderRadius.circular(5),
                     ))),
                 onPressed: () {
+                  FirebaseAnalytic().logEvent("WHATSAPP_CLICKED");
                   Uri waUrl = Uri.parse(
                       "https://wa.me/${phoneNumber}?text=Hello,%20I'm%20interested");
                   launchUrl(waUrl);

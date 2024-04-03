@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rrahadis_web/core/device_size.dart';
+import 'package:rrahadis_web/core/firebase_analytics.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../entities/response_data.dart';
@@ -39,6 +40,8 @@ class _HomePageState extends State<HomePage> {
         responseData = response;
       });
     });
+
+    FirebaseAnalytic().logEvent("HOME_CLICKED");
     super.initState();
   }
 
@@ -198,6 +201,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.circular(5),
                     ))),
                 onPressed: () {
+                  FirebaseAnalytic().logEvent("WHATSAPP_CLICKED");
                   Uri waUrl = Uri.parse(
                       "https://wa.me/${responseData?.heroPhoneNumber ?? ""}?text=Hello,%20I'm%20interested");
                   launchUrl(waUrl);
@@ -217,6 +221,7 @@ class _HomePageState extends State<HomePage> {
                         // setState(() {
                         //   currentState = index;
                         // });
+                        FirebaseAnalytic().logEvent("SOCMED_CLICKED");
                         final Uri _url =
                             Uri.parse(responseData?.socmed?[index].value ?? '');
                         _launchUrl(_url);
@@ -406,6 +411,7 @@ class _HomePageState extends State<HomePage> {
                             borderRadius: BorderRadius.circular(5),
                           ))),
                       onPressed: () {
+                        FirebaseAnalytic().logEvent("WHATSAPP_CLICKED");
                         Uri waUrl = Uri.parse(
                             "https://wa.me/${responseData?.heroPhoneNumber ?? ""}?text=Hello,%20I'm%20interested");
                         launchUrl(waUrl);
@@ -425,6 +431,7 @@ class _HomePageState extends State<HomePage> {
                               // setState(() {
                               //   currentState = index;
                               // });
+                              FirebaseAnalytic().logEvent("SOCMED_CLICKED");
                               final Uri _url = Uri.parse(
                                   responseData?.socmed?[index].value ?? '');
                               _launchUrl(_url);
